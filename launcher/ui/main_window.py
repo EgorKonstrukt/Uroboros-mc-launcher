@@ -10,7 +10,7 @@ from PyQt6.QtGui import QIcon, QPixmap
 
 from launcher.api.api_manager import APIManager
 from launcher.api.auth import YggdrasilSession, YggdrasilAuth
-from launcher.config import LauncherConfig, cache_projects, load_cached_projects, cached_projects_stale
+from launcher.config import LauncherConfig, API_URL, PROJECT_ID, cache_projects, load_cached_projects, cached_projects_stale
 from launcher.ui.settings_dialog import SettingsDialog
 from launcher.ui.login_dialog import LoginDialog
 from launcher.game.starter import GameStarter
@@ -45,7 +45,7 @@ class MainWindow(QWidget):
     def __init__(self, config: LauncherConfig, parent=None):
         super().__init__(parent)
         self.config = config
-        self.api = APIManager(config.api_url, verify_ssl=config.verify_ssl)
+        self.api = APIManager(API_URL, verify_ssl=config.verify_ssl)
         self.project = None
         self.modpacks = []
         self.modpack_cards = []
@@ -232,10 +232,9 @@ class MainWindow(QWidget):
         super().closeEvent(event)
 
     def _load_project(self, force: bool = False):
-        pid = self.config.project_id
+        pid = PROJECT_ID
         if not pid:
-            self.loading_label.setText("No project configured. Open Settings and set a Project ID.")
-            self.settings_btn.setText("Configure")
+            self.loading_label.setText("No project configured.")
             return
 
         def do_fetch():
@@ -315,7 +314,7 @@ class MainWindow(QWidget):
         self._load_bans()
 
     def _load_servers(self):
-        pid = self.config.project_id
+        pid = PROJECT_ID
         if not pid:
             return
 
@@ -761,9 +760,9 @@ class MainWindow(QWidget):
             if session.access_token and session.access_token != "0":
                 from launcher.game.injector import download_injector, injector_downloaded, get_injector_path
                 if not injector_downloaded():
-                    download_injector(self.config.api_url, verify_ssl=self.config.verify_ssl)
+                    download_injector(API_URL, verify_ssl=self.config.verify_ssl)
                 injector_jar = str(get_injector_path())
-                injector_url = self.config.api_url.rstrip("/")
+                injector_url = API_URL.rstrip("/")
             return meta, xmx, xms, jvm_args, injector_jar, injector_url
 
         def on_done(result):
@@ -818,7 +817,7 @@ class MainWindow(QWidget):
         dialog = SettingsDialog(self.config, self)
         if dialog.exec():
             self.config = LauncherConfig.load()
-            self.api = APIManager(self.config.api_url, verify_ssl=self.config.verify_ssl)
+            self.api = APIManager(API_URL, verify_ssl=self.config.verify_ssl)
             self._apply_theme()
             self._apply_console_mode()
             self._load_project()
@@ -838,7 +837,7 @@ class MainWindow(QWidget):
 
     def _load_account_head(self):
         uid = self.config.account_uuid
-        api_url = self.config.api_url
+        api_url = API_URL
         verify_ssl = self.config.verify_ssl
 
         def work():
@@ -907,7 +906,7 @@ class MainWindow(QWidget):
     def _logout(self):
         if self.config.access_token:
             try:
-                auth = YggdrasilAuth(f"{self.config.api_url}/auth", verify_ssl=self.config.verify_ssl)
+                auth = YggdrasilAuth(f"{API_URL}/auth", verify_ssl=self.config.verify_ssl)
                 auth.invalidate(self.config.access_token, self.config.client_token)
             except Exception:
                 pass
@@ -924,7 +923,7 @@ class MainWindow(QWidget):
     def _refresh_session(self):
         if not (self.config.access_token and self.config.account_name):
             return None
-        auth = YggdrasilAuth(f"{self.config.api_url}/auth", verify_ssl=self.config.verify_ssl)
+        auth = YggdrasilAuth(f"{API_URL}/auth", verify_ssl=self.config.verify_ssl)
         if not auth.validate(self.config.access_token, self.config.client_token):
             try:
                 auth.refresh(self.config.access_token, self.config.client_token)

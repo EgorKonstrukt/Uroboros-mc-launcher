@@ -12,6 +12,9 @@ PROJECTS_CACHE = get_launcher_dir() / "projects_cache.json"
 
 CACHE_MAX_AGE_SECONDS = 300
 
+API_URL = "http://127.0.0.1:25581"
+PROJECT_ID = ""
+
 
 @dataclass
 class ModpackInfo:
@@ -51,8 +54,6 @@ class ProjectInfo:
 
 @dataclass
 class LauncherConfig:
-    api_url: str = "http://127.0.0.1:25581"
-    project_id: str = ""
     java_path: str = "java"
     java_args: str = "-XX:+UnlockExperimentalVMOptions -XX:+UseG1GC"
     min_memory: int = 1024

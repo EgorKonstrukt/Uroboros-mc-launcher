@@ -8,13 +8,14 @@ from PyQt6.QtCore import Qt
 
 from launcher.api.auth import YggdrasilAuth
 from launcher.utils.async_worker import run_async
+from launcher.config import API_URL
 
 
 class SkinDialog(QDialog):
     def __init__(self, config, parent=None):
         super().__init__(parent)
         self.config = config
-        self.auth = YggdrasilAuth(f"{config.api_url}/auth", verify_ssl=config.verify_ssl)
+        self.auth = YggdrasilAuth(f"{API_URL}/auth", verify_ssl=config.verify_ssl)
         self._pending_path = ""
         self.setWindowTitle("Change skin")
         self.setMinimumWidth(380)
@@ -78,7 +79,7 @@ class SkinDialog(QDialog):
         def work():
             try:
                 resp = requests.get(
-                    f"{self.config.api_url}/auth/skin/{uid}",
+                    f"{API_URL}/auth/skin/{uid}",
                     timeout=10,
                     verify=self.config.verify_ssl,
                 )

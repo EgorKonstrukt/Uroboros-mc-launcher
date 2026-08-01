@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (
     QLineEdit, QPushButton,
 )
 
-from launcher.config import LauncherConfig
+from launcher.config import LauncherConfig, API_URL
 from launcher.api.auth import YggdrasilAuth
 from launcher.utils.async_worker import run_async
 
@@ -13,7 +13,7 @@ class LoginDialog(QDialog):
         super().__init__(parent)
         self.config = config
         self.session = None
-        self.auth = YggdrasilAuth(f"{config.api_url}/auth", verify_ssl=config.verify_ssl)
+        self.auth = YggdrasilAuth(f"{API_URL}/auth", verify_ssl=config.verify_ssl)
         self.setWindowTitle("Account login")
         self.setMinimumWidth(400)
         self._setup_ui()

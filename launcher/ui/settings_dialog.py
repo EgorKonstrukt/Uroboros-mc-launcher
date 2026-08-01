@@ -25,12 +25,6 @@ class SettingsDialog(QDialog):
         form = QFormLayout()
         form.setSpacing(12)
 
-        self.api_url_input = QLineEdit(self)
-        form.addRow("API URL:", self.api_url_input)
-
-        self.project_id_input = QLineEdit(self)
-        form.addRow("Project ID:", self.project_id_input)
-
         self.java_path_input = QLineEdit(self)
         java_manage = QPushButton("Java Manager", self)
         java_manage.clicked.connect(self._open_java_manager)
@@ -94,8 +88,6 @@ class SettingsDialog(QDialog):
         layout.addLayout(btn_layout)
 
     def _load_config(self):
-        self.api_url_input.setText(self.config.api_url)
-        self.project_id_input.setText(self.config.project_id)
         self.java_path_input.setText(self.config.java_path)
         self.min_mem.setValue(self.config.min_memory)
         self.max_mem.setValue(self.config.max_memory)
@@ -123,8 +115,6 @@ class SettingsDialog(QDialog):
             self.game_dir_input.setText(path)
 
     def _save(self):
-        self.config.api_url = self.api_url_input.text().strip()
-        self.config.project_id = self.project_id_input.text().strip()
         self.config.java_path = self.java_path_input.text()
         self.config.min_memory = self.min_mem.value()
         self.config.max_memory = self.max_mem.value()
