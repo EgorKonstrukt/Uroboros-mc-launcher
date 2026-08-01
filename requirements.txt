@@ -1,0 +1,4 @@
+PyQt6>=6.5
+requests>=2.31
+psutil>=5.9
+nuitka>=2.0

@@ -1,0 +1,800 @@
+QWidget {
+    font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+QWidget#MainWindow {
+    background: #F6F2FA;
+}
+
+QDialog {
+    background: #FFFFFF;
+}
+
+QLabel {
+    color: #1C1B1F;
+}
+
+QPushButton {
+    background: #E6E0E9;
+    color: #1C1B1F;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+QPushButton:hover {
+    background: #DCD6E1;
+}
+
+QPushButton:pressed {
+    background: #CEC7D4;
+}
+
+QPushButton:disabled {
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.38);
+}
+
+QLineEdit {
+    background: transparent;
+    color: #1C1B1F;
+    border: 2px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 9px 12px;
+    font-size: 14px;
+    selection-background-color: #6200EE;
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:hover {
+    border-color: rgba(0, 0, 0, 0.6);
+}
+
+QLineEdit:focus {
+    border-color: #6200EE;
+}
+
+QSpinBox {
+    background: transparent;
+    color: #1C1B1F;
+    border: 2px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 13px;
+    selection-background-color: #6200EE;
+    selection-color: #FFFFFF;
+}
+
+QSpinBox:hover {
+    border-color: rgba(0, 0, 0, 0.6);
+}
+
+QSpinBox:focus {
+    border-color: #6200EE;
+}
+
+QCheckBox {
+    spacing: 10px;
+    color: #1C1B1F;
+    font-size: 14px;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(0, 0, 0, 0.7);
+    border-radius: 2px;
+    background: transparent;
+}
+
+QCheckBox::indicator:hover {
+    border-color: #6200EE;
+}
+
+QCheckBox::indicator:checked {
+    background: #6200EE;
+    border-color: #6200EE;
+}
+
+QComboBox {
+    background: transparent;
+    color: #1C1B1F;
+    border: 2px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+QComboBox:hover {
+    border-color: rgba(0, 0, 0, 0.6);
+}
+
+QComboBox:focus {
+    border-color: #6200EE;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 28px;
+}
+
+QComboBox QAbstractItemView {
+    background: #FFFFFF;
+    color: #1C1B1F;
+    border: 1px solid #E4E0E8;
+    border-radius: 4px;
+    selection-background-color: rgba(98, 0, 238, 0.12);
+    selection-color: #1C1B1F;
+    outline: none;
+    padding: 4px;
+}
+
+QProgressBar {
+    border: none;
+    border-radius: 2px;
+    background: rgba(98, 0, 238, 0.15);
+    height: 4px;
+    text-align: center;
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+QProgressBar::chunk {
+    background: #6200EE;
+    border-radius: 2px;
+}
+
+QScrollArea#MainScroll {
+    border: none;
+    background: transparent;
+}
+
+QScrollArea#MainScroll > QWidget {
+    background: transparent;
+}
+
+QScrollArea#MainScroll > QWidget > QWidget {
+    background: transparent;
+}
+
+QScrollBar:vertical {
+    width: 10px;
+    background: transparent;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgba(0, 0, 0, 0.24);
+    border-radius: 5px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+QScrollBar:horizontal {
+    height: 10px;
+    background: transparent;
+    margin: 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background: rgba(0, 0, 0, 0.24);
+    border-radius: 5px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+QMenu {
+    background: #FFFFFF;
+    color: #1C1B1F;
+    border: 1px solid #E4E0E8;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+QMenu::item {
+    padding: 8px 24px;
+    border-radius: 4px;
+}
+
+QMenu::item:selected {
+    background: rgba(98, 0, 238, 0.12);
+}
+
+QMenu::item:disabled {
+    color: rgba(0, 0, 0, 0.38);
+}
+
+QLabel#TitleLabel {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1C1B1F;
+    letter-spacing: 0.25px;
+}
+
+QPushButton#AccountButton {
+    background: transparent;
+    color: #008C4A;
+    border: 1px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+QPushButton#AccountButton:hover {
+    background: rgba(0, 200, 83, 0.08);
+}
+
+QPushButton#AccountButton:pressed {
+    background: rgba(0, 200, 83, 0.16);
+}
+
+QPushButton#RefreshButton {
+    background: transparent;
+    color: #B26500;
+    border: 1px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+QPushButton#RefreshButton:hover {
+    background: rgba(255, 179, 0, 0.08);
+}
+
+QPushButton#RefreshButton:pressed {
+    background: rgba(255, 179, 0, 0.16);
+}
+
+QPushButton#SettingsButton {
+    background: transparent;
+    color: #1C1B1F;
+    border: 1px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+QPushButton#SettingsButton:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+QPushButton#SettingsButton:pressed {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+QLabel#BannedLabel {
+    background: rgba(176, 0, 32, 0.08);
+    color: #B00020;
+    border: 1px solid rgba(176, 0, 32, 0.5);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 13px;
+}
+
+QWidget#MainContent {
+    background: transparent;
+}
+
+QLabel#LoadingLabel {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+}
+
+QWidget#ProjectSection {
+    background: transparent;
+}
+
+QLabel#DescLabel {
+    color: rgba(0, 0, 0, 0.74);
+    font-size: 14px;
+}
+
+QLabel#ModpacksHeader {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1C1B1F;
+    letter-spacing: 0.15px;
+    margin-top: 4px;
+}
+
+QWidget#CardsWidget {
+    background: transparent;
+}
+
+QWidget#DownloadStatus {
+    background: #ECE6F0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+QLabel#StatusLabel {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
+}
+
+QPushButton#CancelButton {
+    background: #B00020;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+QPushButton#CancelButton:hover {
+    background: #C42332;
+}
+
+QPushButton#CancelButton:pressed {
+    background: #8E001A;
+}
+
+QWidget#DetailsWidget {
+    background: transparent;
+}
+
+QLabel#DetailKey {
+    color: rgba(0, 0, 0, 0.55);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+QLabel#DetailValue {
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    background: transparent;
+    border: none;
+}
+
+QLabel#EmptyLabel {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 13px;
+    padding: 20px;
+}
+
+QFrame#ModpackCard {
+    background: #FFFFFF;
+    border: 1px solid #E4E0E8;
+    border-radius: 4px;
+}
+
+QFrame#ModpackCard:hover {
+    background: #F3EDF7;
+    border-color: #6200EE;
+}
+
+QLabel#ModpackIcon {
+    background: #6200EE;
+    color: #FFFFFF;
+    font-weight: 500;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+QLabel#ModpackName {
+    font-weight: 500;
+    font-size: 16px;
+    color: #1C1B1F;
+    letter-spacing: 0.15px;
+}
+
+QLabel#ModpackMeta {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+QLabel#ModpackDesc {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.74);
+    margin-top: 2px;
+}
+
+QPushButton#InstallButton {
+    background: #6200EE;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 20px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+QPushButton#InstallButton:hover {
+    background: #7A3BF5;
+}
+
+QPushButton#InstallButton:pressed {
+    background: #4A00B8;
+}
+
+QPushButton#PlayButton {
+    background: #00C853;
+    color: #000000;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 20px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+QPushButton#PlayButton:hover {
+    background: #20D465;
+}
+
+QPushButton#PlayButton:pressed {
+    background: #00B04A;
+}
+
+QPushButton#PlayButton:disabled {
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.38);
+}
+
+QLabel#ServerHeader {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.74);
+    margin-top: 4px;
+    letter-spacing: 0.1px;
+}
+
+QLabel#ServerLabel {
+    font-size: 12px;
+}
+
+QLabel#ServerLabel[status="online"] {
+    color: #008C4A;
+}
+
+QLabel#ServerLabel[status="starting"] {
+    color: #B26500;
+}
+
+QLabel#ServerLabel[status="banned"] {
+    color: #B00020;
+}
+
+QLabel#ServerLabel[status="offline"] {
+    color: #B00020;
+}
+
+QPushButton#ServerButton {
+    background: #FFB300;
+    color: #000000;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+QPushButton#ServerButton:hover {
+    background: #FFC143;
+}
+
+QPushButton#ServerButton:pressed {
+    background: #F5A800;
+}
+
+QPushButton#ServerButton:disabled {
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.38);
+}
+
+QPushButton#CardMenuButton {
+    background: transparent;
+    color: rgba(0, 0, 0, 0.74);
+    border: 1px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+QPushButton#CardMenuButton:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+QPushButton#CardMenuButton:pressed {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+QPushButton#DeleteButton {
+    background: transparent;
+    color: #B00020;
+    border: 1px solid rgba(176, 0, 32, 0.5);
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+QPushButton#DeleteButton:hover {
+    background: rgba(176, 0, 32, 0.08);
+}
+
+QPushButton#DeleteButton:pressed {
+    background: rgba(176, 0, 32, 0.16);
+}
+
+QTextEdit#ConsoleOutput {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+    background: #FFFFFF;
+    color: #1C1B1F;
+    border: 1px solid #E4E0E8;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+QWidget#ConsoleWindow {
+    background: #F6F2FA;
+}
+
+QPushButton#ConsoleClearButton {
+    background: transparent;
+    color: rgba(0, 0, 0, 0.74);
+    border: 1px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+}
+
+QPushButton#ConsoleClearButton:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+QPushButton#ConsoleClearButton:pressed {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+QToolButton#ConsoleToolButton {
+    background: transparent;
+    color: rgba(0, 0, 0, 0.74);
+    border: 1px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+QToolButton#ConsoleToolButton:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+QToolButton#ConsoleToolButton:pressed {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+QToolButton#ConsoleToolButton:checked {
+    background: rgba(108, 99, 255, 0.18);
+    color: #1C1B1F;
+    border: 1px solid rgba(108, 99, 255, 0.6);
+}
+
+QToolButton#ConsoleNavButton {
+    background: transparent;
+    color: rgba(0, 0, 0, 0.74);
+    border: 1px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+QToolButton#ConsoleNavButton:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+QToolButton#ConsoleNavButton:pressed {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+QLineEdit#ConsoleSearch {
+    background: #FFFFFF;
+    color: #1C1B1F;
+    border: 1px solid #E4E0E8;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+QLineEdit#ConsoleSearch:focus {
+    border: 1px solid #6C63FF;
+}
+
+QComboBox#ConsoleLevelFilter {
+    background: #FFFFFF;
+    color: #1C1B1F;
+    border: 1px solid #E4E0E8;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    min-width: 140px;
+}
+
+QComboBox#ConsoleLevelFilter:hover {
+    border: 1px solid #6C63FF;
+}
+
+QComboBox#ConsoleLevelFilter::drop-down {
+    border: none;
+    width: 22px;
+}
+
+QComboBox#ConsoleLevelFilter::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid rgba(0, 0, 0, 0.6);
+    margin-right: 6px;
+}
+
+QComboBox#ConsoleLevelFilter QAbstractItemView {
+    background: #FFFFFF;
+    color: #1C1B1F;
+    border: 1px solid #E4E0E8;
+    selection-background-color: rgba(108, 99, 255, 0.18);
+    selection-color: #1C1B1F;
+}
+
+QCheckBox#ConsoleRegex {
+    color: rgba(0, 0, 0, 0.74);
+    font-size: 12px;
+    spacing: 5px;
+}
+
+QLabel#ConsoleStatus {
+    color: rgba(0, 0, 0, 0.48);
+    font-size: 11px;
+}
+
+QLabel#DialogTitle {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1C1B1F;
+    letter-spacing: 0.25px;
+}
+
+QLabel#DialogError {
+    color: #B00020;
+    font-size: 13px;
+}
+
+QDialog QLabel {
+    color: rgba(0, 0, 0, 0.74);
+}
+
+QLabel#SkinPreview {
+    border: 1px dashed rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.6);
+    background: #F6F2FA;
+    font-size: 12px;
+}
+
+QLabel#SkinFileLabel {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
+}
+
+QLabel#SectionLabel {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.74);
+    letter-spacing: 0.1px;
+    margin-top: 8px;
+}
+
+QFrame#JavaRow {
+    background: #FFFFFF;
+    border: 1px solid #E4E0E8;
+    border-radius: 4px;
+}
+
+QLabel#JavaVersionLabel {
+    color: #008C4A;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+QLabel#JavaPathLabel {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
+}
+
+QPushButton#UseButton {
+    background: #6200EE;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+}
+
+QPushButton#UseButton:hover {
+    background: #7A3BF5;
+}
+
+QPushButton#UseButton:pressed {
+    background: #4A00B8;
+}
+
+QPushButton#UseButton:disabled {
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.38);
+}
+
+QPushButton#DeleteButton {
+    background: transparent;
+    color: #B00020;
+    border: 1px solid rgba(176, 0, 32, 0.5);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+}
+
+QPushButton#DeleteButton:hover {
+    background: rgba(176, 0, 32, 0.08);
+}
+
+QPushButton#DeleteButton:pressed {
+    background: rgba(176, 0, 32, 0.16);
+}
+
+QPushButton#InstallJavaButton {
+    background: #6200EE;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 20px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+QPushButton#InstallJavaButton:hover {
+    background: #7A3BF5;
+}
+
+QPushButton#InstallJavaButton:pressed {
+    background: #4A00B8;
+}
