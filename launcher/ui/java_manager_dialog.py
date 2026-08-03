@@ -4,13 +4,15 @@ from pathlib import Path
 
 from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QComboBox, QProgressBar, QScrollArea, QWidget, QFrame,
+    QComboBox, QScrollArea, QWidget, QFrame,
 )
 from PyQt6.QtCore import Qt, QObject, pyqtSignal
+from PyQt6.QtGui import QShowEvent
 
 from launcher.config import LauncherConfig
 from launcher.game.java_manager import JavaManager, INSTALLABLE_VERSIONS
 from launcher.utils.async_worker import run_async
+from launcher.ui.animations import fade_in_window, SmoothProgressBar
 
 
 class _JavaSignals(QObject):
@@ -102,7 +104,7 @@ class JavaManagerDialog(QDialog):
         self.install_status.setWordWrap(True)
         layout.addWidget(self.install_status)
 
-        self.progress_bar = QProgressBar(self)
+        self.progress_bar = SmoothProgressBar(self)
         self.progress_bar.setVisible(False)
         layout.addWidget(self.progress_bar)
 
@@ -282,3 +284,7 @@ class JavaManagerDialog(QDialog):
         elif phase == "java_extract":
             self.progress_bar.setRange(0, 0)
             self.install_status.setText("Extracting Java...")
+
+    def showEvent(self, event: QShowEvent):
+        super().showEvent(event)
+        fade_in_window(self, 220)

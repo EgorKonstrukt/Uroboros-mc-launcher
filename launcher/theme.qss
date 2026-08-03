@@ -18,11 +18,11 @@ QPushButton {
     background: #333333;
     color: #FFFFFF;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 8px 16px;
     font-size: 13px;
     font-weight: 500;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
 QPushButton:hover {
@@ -34,15 +34,15 @@ QPushButton:pressed {
 }
 
 QPushButton:disabled {
-    background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.3);
 }
 
 QLineEdit {
     background: transparent;
     color: #FFFFFF;
-    border: 2px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
     padding: 9px 12px;
     font-size: 14px;
     selection-background-color: #BB86FC;
@@ -50,7 +50,7 @@ QLineEdit {
 }
 
 QLineEdit:hover {
-    border-color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 QLineEdit:focus {
@@ -60,8 +60,8 @@ QLineEdit:focus {
 QSpinBox {
     background: transparent;
     color: #FFFFFF;
-    border: 2px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
     padding: 6px 10px;
     font-size: 13px;
     selection-background-color: #BB86FC;
@@ -69,7 +69,7 @@ QSpinBox {
 }
 
 QSpinBox:hover {
-    border-color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 QSpinBox:focus {
@@ -85,8 +85,8 @@ QCheckBox {
 QCheckBox::indicator {
     width: 18px;
     height: 18px;
-    border: 2px solid rgba(255, 255, 255, 0.7);
-    border-radius: 2px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 4px;
     background: transparent;
 }
 
@@ -102,14 +102,14 @@ QCheckBox::indicator:checked {
 QComboBox {
     background: transparent;
     color: #FFFFFF;
-    border: 2px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
     padding: 6px 12px;
     font-size: 13px;
 }
 
 QComboBox:hover {
-    border-color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 QComboBox:focus {
@@ -125,8 +125,8 @@ QComboBox QAbstractItemView {
     background: #242424;
     color: #FFFFFF;
     border: 1px solid #333333;
-    border-radius: 4px;
-    selection-background-color: rgba(187, 134, 252, 0.24);
+    border-radius: 6px;
+    selection-background-color: rgba(187, 134, 252, 0.2);
     selection-color: #FFFFFF;
     outline: none;
     padding: 4px;
@@ -134,17 +134,17 @@ QComboBox QAbstractItemView {
 
 QProgressBar {
     border: none;
-    border-radius: 2px;
-    background: rgba(187, 134, 252, 0.24);
-    height: 4px;
+    border-radius: 3px;
+    background: rgba(187, 134, 252, 0.2);
+    height: 6px;
     text-align: center;
     font-size: 10px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 QProgressBar::chunk {
     background: #BB86FC;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 QScrollArea#MainScroll {
@@ -167,13 +167,13 @@ QScrollBar:vertical {
 }
 
 QScrollBar::handle:vertical {
-    background: rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
     min-height: 30px;
 }
 
 QScrollBar::handle:vertical:hover {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.35);
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
@@ -191,13 +191,13 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-    background: rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
     min-width: 30px;
 }
 
 QScrollBar::handle:horizontal:hover {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.35);
 }
 
 QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
@@ -212,7 +212,7 @@ QMenu {
     background: #242424;
     color: #FFFFFF;
     border: 1px solid #333333;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 4px;
 }
 
@@ -222,16 +222,21 @@ QMenu::item {
 }
 
 QMenu::item:selected {
-    background: rgba(187, 134, 252, 0.24);
+    background: rgba(187, 134, 252, 0.2);
 }
 
 QMenu::item:disabled {
-    color: rgba(255, 255, 255, 0.38);
+    color: rgba(255, 255, 255, 0.3);
+}
+
+QWidget#HeaderBar {
+    background: #1A1A1A;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 QLabel#TitleLabel {
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     color: #FFFFFF;
     letter-spacing: 0.25px;
 }
@@ -239,63 +244,66 @@ QLabel#TitleLabel {
 QPushButton#AccountButton {
     background: transparent;
     color: #69F0AE;
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
-    padding: 8px 18px;
+    border: 1px solid rgba(105, 240, 174, 0.4);
+    border-radius: 6px;
+    padding: 6px 16px;
     font-size: 13px;
     font-weight: 500;
 }
 
 QPushButton#AccountButton:hover {
-    background: rgba(105, 240, 174, 0.08);
+    background: rgba(105, 240, 174, 0.1);
+    border-color: rgba(105, 240, 174, 0.6);
 }
 
 QPushButton#AccountButton:pressed {
-    background: rgba(105, 240, 174, 0.16);
+    background: rgba(105, 240, 174, 0.18);
 }
 
 QPushButton#RefreshButton {
     background: transparent;
     color: #FFD54F;
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
-    padding: 8px 18px;
+    border: 1px solid rgba(255, 213, 79, 0.4);
+    border-radius: 6px;
+    padding: 6px 16px;
     font-size: 13px;
     font-weight: 500;
 }
 
 QPushButton#RefreshButton:hover {
-    background: rgba(255, 213, 79, 0.08);
+    background: rgba(255, 213, 79, 0.1);
+    border-color: rgba(255, 213, 79, 0.6);
 }
 
 QPushButton#RefreshButton:pressed {
-    background: rgba(255, 213, 79, 0.16);
+    background: rgba(255, 213, 79, 0.18);
 }
 
 QPushButton#SettingsButton {
     background: transparent;
-    color: #FFFFFF;
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
-    padding: 8px 18px;
+    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    padding: 6px 16px;
     font-size: 13px;
     font-weight: 500;
 }
 
 QPushButton#SettingsButton:hover {
     background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 QPushButton#SettingsButton:pressed {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.14);
 }
 
 QLabel#BannedLabel {
-    background: rgba(207, 102, 121, 0.16);
+    background: rgba(207, 102, 121, 0.12);
     color: #F3B9C2;
-    border: 1px solid rgba(207, 102, 121, 0.6);
-    border-radius: 4px;
-    padding: 10px 14px;
+    border: 1px solid rgba(207, 102, 121, 0.4);
+    border-radius: 8px;
+    padding: 12px 16px;
     font-size: 13px;
 }
 
@@ -304,7 +312,7 @@ QWidget#MainContent {
 }
 
 QLabel#LoadingLabel {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 14px;
 }
 
@@ -312,17 +320,8 @@ QWidget#ProjectSection {
     background: transparent;
 }
 
-QLabel#DescLabel {
-    color: rgba(255, 255, 255, 0.74);
-    font-size: 14px;
-}
-
-QLabel#ModpacksHeader {
-    font-size: 15px;
-    font-weight: 500;
-    color: #FFFFFF;
-    letter-spacing: 0.15px;
-    margin-top: 4px;
+QWidget#ProjectSection {
+    background: transparent;
 }
 
 QWidget#CardsWidget {
@@ -331,21 +330,22 @@ QWidget#CardsWidget {
 
 QWidget#DownloadStatus {
     background: #1A1A1A;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 QLabel#StatusLabel {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 12px;
+    letter-spacing: 0.2px;
 }
 
 QPushButton#CancelButton {
     background: #CF6679;
     color: #000000;
     border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-weight: 500;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.5px;
 }
@@ -363,13 +363,14 @@ QWidget#DetailsWidget {
 }
 
 QLabel#DetailKey {
-    color: rgba(255, 255, 255, 0.45);
-    font-size: 12px;
-    font-weight: 500;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
 QLabel#DetailValue {
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.8);
     font-size: 12px;
     font-family: 'Consolas', 'Courier New', monospace;
     background: transparent;
@@ -377,32 +378,33 @@ QLabel#DetailValue {
 }
 
 QLabel#EmptyLabel {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 13px;
-    padding: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    padding: 32px;
 }
 
 QFrame#ModpackCard {
     background: #1E1E1E;
     border: 1px solid #2C2C2C;
-    border-radius: 4px;
+    border-radius: 8px;
+    padding: 4px;
 }
 
 QFrame#ModpackCard:hover {
-    background: #242424;
-    border-color: #BB86FC;
+    background: #222222;
+    border-color: rgba(187, 134, 252, 0.4);
 }
 
 QLabel#ModpackIcon {
     background: #BB86FC;
     color: #000000;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 16px;
-    border-radius: 4px;
+    border-radius: 8px;
 }
 
 QLabel#ModpackName {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 16px;
     color: #FFFFFF;
     letter-spacing: 0.15px;
@@ -410,22 +412,24 @@ QLabel#ModpackName {
 
 QLabel#ModpackMeta {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.2px;
 }
 
 QLabel#ModpackDesc {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.74);
-    margin-top: 2px;
+    color: rgba(255, 255, 255, 0.65);
+    margin-top: 4px;
+    padding: 2px 0;
 }
 
 QPushButton#InstallButton {
     background: #BB86FC;
     color: #000000;
     border: none;
-    border-radius: 4px;
-    padding: 8px 20px;
-    font-weight: 500;
+    border-radius: 6px;
+    padding: 8px 24px;
+    font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.5px;
 }
@@ -442,9 +446,9 @@ QPushButton#PlayButton {
     background: #69F0AE;
     color: #000000;
     border: none;
-    border-radius: 4px;
-    padding: 8px 20px;
-    font-weight: 500;
+    border-radius: 6px;
+    padding: 8px 24px;
+    font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.5px;
 }
@@ -458,20 +462,34 @@ QPushButton#PlayButton:pressed {
 }
 
 QPushButton#PlayButton:disabled {
-    background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.3);
 }
 
 QLabel#ServerHeader {
-    font-size: 12px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.74);
-    margin-top: 4px;
-    letter-spacing: 0.1px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 QLabel#ServerLabel {
     font-size: 12px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+QWidget#ServerRow {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    padding: 2px 0;
+}
+
+QWidget#ServerRow:hover {
+    background: rgba(255, 255, 255, 0.06);
 }
 
 QLabel#ServerLabel[status="online"] {
@@ -487,7 +505,7 @@ QLabel#ServerLabel[status="banned"] {
 }
 
 QLabel#ServerLabel[status="offline"] {
-    color: #CF6679;
+    color: rgba(255, 255, 255, 0.4);
 }
 
 QPushButton#ServerButton {
@@ -495,10 +513,10 @@ QPushButton#ServerButton {
     color: #000000;
     border: none;
     border-radius: 4px;
-    padding: 8px 16px;
-    font-weight: 500;
-    font-size: 13px;
-    letter-spacing: 0.5px;
+    padding: 5px 14px;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.3px;
 }
 
 QPushButton#ServerButton:hover {
@@ -510,25 +528,26 @@ QPushButton#ServerButton:pressed {
 }
 
 QPushButton#ServerButton:disabled {
-    background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.3);
 }
 
 QPushButton#CardMenuButton {
     background: transparent;
-    color: rgba(255, 255, 255, 0.74);
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
-    padding: 8px 12px;
+    color: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 7px 10px;
     font-size: 14px;
 }
 
 QPushButton#CardMenuButton:hover {
     background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.35);
 }
 
 QPushButton#CardMenuButton:pressed {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.14);
 }
 
 QPushButton#DeleteButton {
@@ -556,7 +575,7 @@ QTextEdit#ConsoleOutput {
     background: #1A1A1A;
     color: #E0E0E0;
     border: 1px solid #2C2C2C;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 8px;
 }
 
@@ -566,10 +585,10 @@ QWidget#ConsoleWindow {
 
 QPushButton#ConsoleClearButton {
     background: transparent;
-    color: rgba(255, 255, 255, 0.74);
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
-    padding: 4px 12px;
+    color: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 5px 12px;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.4px;
@@ -577,59 +596,62 @@ QPushButton#ConsoleClearButton {
 
 QPushButton#ConsoleClearButton:hover {
     background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.35);
 }
 
 QPushButton#ConsoleClearButton:pressed {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.14);
 }
 
 QToolButton#ConsoleToolButton {
     background: transparent;
-    color: rgba(255, 255, 255, 0.74);
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
-    padding: 4px 10px;
+    color: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 5px 10px;
     font-size: 12px;
     font-weight: 500;
 }
 
 QToolButton#ConsoleToolButton:hover {
     background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.35);
 }
 
 QToolButton#ConsoleToolButton:pressed {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.14);
 }
 
 QToolButton#ConsoleToolButton:checked {
-    background: rgba(108, 99, 255, 0.22);
+    background: rgba(108, 99, 255, 0.2);
     color: #FFFFFF;
-    border: 1px solid rgba(108, 99, 255, 0.6);
+    border: 1px solid rgba(108, 99, 255, 0.5);
 }
 
 QToolButton#ConsoleNavButton {
     background: transparent;
-    color: rgba(255, 255, 255, 0.74);
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
-    padding: 4px 8px;
+    color: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 5px 8px;
     font-size: 12px;
 }
 
 QToolButton#ConsoleNavButton:hover {
     background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.35);
 }
 
 QToolButton#ConsoleNavButton:pressed {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.14);
 }
 
 QLineEdit#ConsoleSearch {
     background: #1F1F1F;
     color: #E0E0E0;
     border: 1px solid #3A3A3A;
-    border-radius: 4px;
-    padding: 4px 8px;
+    border-radius: 6px;
+    padding: 5px 10px;
     font-size: 12px;
 }
 
@@ -641,8 +663,8 @@ QComboBox#ConsoleLevelFilter {
     background: #1F1F1F;
     color: #E0E0E0;
     border: 1px solid #3A3A3A;
-    border-radius: 4px;
-    padding: 4px 10px;
+    border-radius: 6px;
+    padding: 5px 10px;
     font-size: 12px;
     min-width: 140px;
 }
@@ -660,7 +682,7 @@ QComboBox#ConsoleLevelFilter::down-arrow {
     image: none;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-top: 5px solid rgba(255, 255, 255, 0.6);
+    border-top: 5px solid rgba(255, 255, 255, 0.5);
     margin-right: 6px;
 }
 
@@ -668,24 +690,25 @@ QComboBox#ConsoleLevelFilter QAbstractItemView {
     background: #1F1F1F;
     color: #E0E0E0;
     border: 1px solid #3A3A3A;
-    selection-background-color: rgba(108, 99, 255, 0.35);
+    border-radius: 6px;
+    selection-background-color: rgba(108, 99, 255, 0.3);
     selection-color: #FFFFFF;
 }
 
 QCheckBox#ConsoleRegex {
-    color: rgba(255, 255, 255, 0.74);
+    color: rgba(255, 255, 255, 0.65);
     font-size: 12px;
     spacing: 5px;
 }
 
 QLabel#ConsoleStatus {
-    color: rgba(255, 255, 255, 0.48);
+    color: rgba(255, 255, 255, 0.4);
     font-size: 11px;
 }
 
 QLabel#DialogTitle {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 22px;
+    font-weight: 600;
     color: #FFFFFF;
     letter-spacing: 0.25px;
 }
@@ -693,37 +716,38 @@ QLabel#DialogTitle {
 QLabel#DialogError {
     color: #CF6679;
     font-size: 13px;
+    font-weight: 500;
 }
 
 QDialog QLabel {
-    color: rgba(255, 255, 255, 0.74);
+    color: rgba(255, 255, 255, 0.65);
 }
 
 QLabel#SkinPreview {
-    border: 1px dashed rgba(255, 255, 255, 0.38);
-    border-radius: 4px;
-    color: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.5);
     background: #1A1A1A;
     font-size: 12px;
 }
 
 QLabel#SkinFileLabel {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 12px;
 }
 
 QLabel#SectionLabel {
     font-size: 13px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.74);
-    letter-spacing: 0.1px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.3px;
     margin-top: 8px;
 }
 
 QFrame#JavaRow {
     background: #1E1E1E;
     border: 1px solid #2C2C2C;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 QLabel#JavaVersionLabel {
@@ -741,9 +765,9 @@ QPushButton#UseButton {
     background: #BB86FC;
     color: #000000;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 6px 14px;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 12px;
     letter-spacing: 0.4px;
 }
@@ -757,36 +781,37 @@ QPushButton#UseButton:pressed {
 }
 
 QPushButton#UseButton:disabled {
-    background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.3);
 }
 
 QPushButton#DeleteButton {
     background: transparent;
     color: #CF6679;
-    border: 1px solid rgba(207, 102, 121, 0.6);
-    border-radius: 4px;
+    border: 1px solid rgba(207, 102, 121, 0.4);
+    border-radius: 6px;
     padding: 6px 14px;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 12px;
     letter-spacing: 0.4px;
 }
 
 QPushButton#DeleteButton:hover {
-    background: rgba(207, 102, 121, 0.12);
+    background: rgba(207, 102, 121, 0.1);
+    border-color: rgba(207, 102, 121, 0.6);
 }
 
 QPushButton#DeleteButton:pressed {
-    background: rgba(207, 102, 121, 0.24);
+    background: rgba(207, 102, 121, 0.2);
 }
 
 QPushButton#InstallJavaButton {
     background: #BB86FC;
     color: #000000;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 8px 20px;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.5px;
 }

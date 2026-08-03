@@ -1,2 +1,2 @@
-APP_NAME = "Uroboros"
-APP_VERSION = "1.0.0"
+APP_NAME = "Uroboros Launcher"
+APP_VERSION = "1.1.0"

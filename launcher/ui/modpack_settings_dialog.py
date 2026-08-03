@@ -2,8 +2,10 @@ from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout, QLabel, QLineEdit,
     QSpinBox, QPushButton, QCheckBox, QFileDialog,
 )
+from PyQt6.QtGui import QShowEvent
 
 from launcher.config import LauncherConfig
+from launcher.ui.animations import fade_in_window
 
 
 class ModpackSettingsDialog(QDialog):
@@ -122,3 +124,7 @@ class ModpackSettingsDialog(QDialog):
         self.config.modpack_settings = settings
         self.config.save()
         self.accept()
+
+    def showEvent(self, event: QShowEvent):
+        super().showEvent(event)
+        fade_in_window(self, 220)

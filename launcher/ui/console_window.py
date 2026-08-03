@@ -1,8 +1,9 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtGui import QCloseEvent
+from PyQt6.QtGui import QShowEvent, QCloseEvent
 
 from launcher.config import LauncherConfig
 from launcher.ui.widgets.console import ConsoleWidget
+from launcher.ui.animations import fade_in_window
 
 
 class ConsoleWindow(QWidget):
@@ -33,6 +34,10 @@ class ConsoleWindow(QWidget):
     def closeEvent(self, event: QCloseEvent):
         self._save_geometry()
         super().closeEvent(event)
+
+    def showEvent(self, event: QShowEvent):
+        super().showEvent(event)
+        fade_in_window(self, 250)
 
     def append(self, text: str):
         self.console.append(text)

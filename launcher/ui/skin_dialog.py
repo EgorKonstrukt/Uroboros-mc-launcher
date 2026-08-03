@@ -3,12 +3,13 @@ from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel,
     QPushButton, QFileDialog, QComboBox,
 )
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QShowEvent
 from PyQt6.QtCore import Qt
 
 from launcher.api.auth import YggdrasilAuth
 from launcher.utils.async_worker import run_async
 from launcher.config import API_URL
+from launcher.ui.animations import fade_in_window
 
 
 class SkinDialog(QDialog):
@@ -192,3 +193,7 @@ class SkinDialog(QDialog):
         self._set_busy(True)
         self.error_label.setText("Removing...")
         run_async(work, on_done=on_done, on_error=on_error)
+
+    def showEvent(self, event: QShowEvent):
+        super().showEvent(event)
+        fade_in_window(self, 220)

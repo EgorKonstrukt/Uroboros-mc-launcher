@@ -2,10 +2,12 @@ from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout, QLabel,
     QLineEdit, QPushButton,
 )
+from PyQt6.QtGui import QShowEvent
 
 from launcher.config import LauncherConfig, API_URL
 from launcher.api.auth import YggdrasilAuth
 from launcher.utils.async_worker import run_async
+from launcher.ui.animations import fade_in_window
 
 
 class LoginDialog(QDialog):
@@ -60,6 +62,10 @@ class LoginDialog(QDialog):
         layout.addLayout(btn_row)
 
         self.password_input.returnPressed.connect(self._do_login)
+
+    def showEvent(self, event: QShowEvent):
+        super().showEvent(event)
+        fade_in_window(self, 220)
 
     def _set_busy(self, busy: bool):
         self.login_btn.setEnabled(not busy)

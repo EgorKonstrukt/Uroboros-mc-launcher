@@ -12,8 +12,8 @@ PROJECTS_CACHE = get_launcher_dir() / "projects_cache.json"
 
 CACHE_MAX_AGE_SECONDS = 300
 
-API_URL = "http://127.0.0.1:25581"
-PROJECT_ID = ""
+API_URL = "http://82.162.59.243:25581"
+PROJECT_ID = "laydigital"
 
 
 @dataclass
@@ -74,8 +74,8 @@ class LauncherConfig:
     console_x: int = -1
     console_y: int = -1
     console_font_size: int = 12
-    console_word_wrap: bool = False
-    console_timestamps: bool = False
+    console_word_wrap: bool = True
+    console_timestamps: bool = True
     console_follow: bool = True
     keep_launcher_open: bool = True
     console_mode: str = "always"

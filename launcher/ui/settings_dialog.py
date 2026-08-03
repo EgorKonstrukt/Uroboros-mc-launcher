@@ -1,7 +1,9 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QFormLayout, QSpinBox, QFileDialog, QPushButton, QLabel, QLineEdit, QCheckBox, QComboBox
+from PyQt6.QtGui import QShowEvent
 
 from launcher.config import LauncherConfig
 from launcher.utils.storage import set_work_dir, ensure_dirs
+from launcher.ui.animations import fade_in_window
 
 
 class SettingsDialog(QDialog):
@@ -128,3 +130,7 @@ class SettingsDialog(QDialog):
         ensure_dirs()
         self.config.save()
         self.accept()
+
+    def showEvent(self, event: QShowEvent):
+        super().showEvent(event)
+        fade_in_window(self, 220)
