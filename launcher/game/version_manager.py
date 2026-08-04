@@ -185,8 +185,9 @@ class VersionManager:
         loader = (loader or "").strip().lower()
         if loader in ("fabric", "quilt"):
             return self._install_fabric_like(mc_version, loader, loader_version)
-        if loader == "neoforge":
-            return self._install_neoforge(mc_version, loader_version, progress_callback, should_cancel)
+        if loader in ("forge", "neoforge"):
+            return self._install_forge_like(mc_version, loader, loader_version,
+                                            progress_callback, should_cancel)
         return mc_version
 
     def _install_fabric_like(self, mc_version: str, loader: str, loader_version: str = "") -> str:
@@ -217,27 +218,35 @@ class VersionManager:
         except requests.RequestException:
             return mc_version
 
-    def _install_neoforge(self, mc_version: str, loader_version: str = "",
-                          progress_callback=None, should_cancel=None) -> str:
+    def _install_forge_like(self, mc_version: str, loader: str, loader_version: str = "",
+                            progress_callback=None, should_cancel=None) -> str:
         import shutil
         import tempfile
         import zipfile
+        import re
+        is_neoforge = loader == "neoforge"
+        maven_base = (
+            "https://maven.neoforged.net/releases/net/neoforged/neoforge"
+            if is_neoforge
+            else "https://maven.minecraftforge.net/net/minecraftforge/forge"
+        )
+        full = loader_version
         tmp_dir = None
         try:
-            if not loader_version:
-                resp = requests.get(
-                    "https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml",
-                    timeout=30,
-                )
+            if not full:
+                resp = requests.get(f"{maven_base}/maven-metadata.xml", timeout=30)
                 resp.raise_for_status()
-                loader_version = self._latest_neoforge_version(resp.text)
-            installer_url = (
-                f"https://maven.neoforged.net/releases/net/neoforged/neoforge/"
-                f"{loader_version}/neoforge-{loader_version}-installer.jar"
-            )
+                versions = re.findall(r"<version>([^<]+)</version>", resp.text)
+                full = self._pick_loader_version(versions, mc_version, is_neoforge)
+                if not full:
+                    return mc_version
+            hint = f"{mc_version}-{loader}-{full}"
+            if self._patch_ready(loader, full) and self.get_meta_path(hint).exists():
+                return hint
+            installer_url = f"{maven_base}/{full}/{loader}-{full}-installer.jar"
             resp = requests.get(installer_url, timeout=60)
             resp.raise_for_status()
-            tmp_dir = Path(tempfile.mkdtemp(prefix="neoforge_"))
+            tmp_dir = Path(tempfile.mkdtemp(prefix="loader_installer_"))
             installer = tmp_dir / "installer.jar"
             installer.write_bytes(resp.content)
             with zipfile.ZipFile(installer) as zf:
@@ -255,14 +264,15 @@ class VersionManager:
                             total_steps = len(ip["processors"])
                     except (json.JSONDecodeError, OSError):
                         pass
-            vid = profile.get("id") or f"{mc_version}-neoforge-{loader_version}"
+            vid = profile.get("id") or hint
             profile["id"] = vid
             path = self.get_meta_path(vid)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(profile, indent=2), encoding="utf-8")
-            if not self._neoforge_patch_ready(loader_version):
-                self._run_neoforge_installer(
-                    installer, profile, total_steps, progress_callback, should_cancel
+            if not self._patch_ready(loader, full):
+                self._run_loader_installer(
+                    installer, profile, total_steps, loader, full,
+                    progress_callback, should_cancel,
                 )
             return vid
         except CancelledError:
@@ -274,13 +284,23 @@ class VersionManager:
                 shutil.rmtree(tmp_dir, ignore_errors=True)
 
     @staticmethod
-    def _neoforge_patch_ready(loader_version: str) -> bool:
-        libs = get_libraries_dir()
-        nf_dir = libs / "net" / "neoforged" / "neoforge" / loader_version
-        if not ((nf_dir / f"neoforge-{loader_version}-universal.jar").exists()
-                and (nf_dir / f"neoforge-{loader_version}-client.jar").exists()):
+    def _loader_artifacts(loader: str, full: str):
+        if loader == "neoforge":
+            fam_dir = get_libraries_dir() / "net" / "neoforged" / "neoforge" / full
+            client_jar = fam_dir / f"neoforge-{full}-client.jar"
+        else:
+            fam_dir = get_libraries_dir() / "net" / "minecraftforge" / "forge" / full
+            client_jar = fam_dir / f"forge-{full}-client.jar"
+        return fam_dir, client_jar
+
+    @classmethod
+    def _patch_ready(cls, loader: str, full: str) -> bool:
+        fam_dir, client_jar = cls._loader_artifacts(loader, full)
+        if (fam_dir / ".patch_ok").exists():
+            return True
+        if not client_jar.exists():
             return False
-        mc_root = libs / "net" / "minecraft" / "client"
+        mc_root = get_libraries_dir() / "net" / "minecraft" / "client"
         if not mc_root.is_dir():
             return False
         return any(
@@ -288,10 +308,13 @@ class VersionManager:
             for d in mc_root.iterdir() if d.is_dir()
         )
 
-    def _run_neoforge_installer(self, installer_jar: Path, profile: dict, total_steps: int,
-                                progress_callback=None, should_cancel=None):
+    def _run_loader_installer(self, installer_jar: Path, profile: dict, total_steps: int,
+                              loader: str, full: str,
+                              progress_callback=None, should_cancel=None):
         import subprocess
+        from launcher.config import LauncherConfig
         from launcher.game.java_manager import JavaManager
+        display = "NeoForge" if loader == "neoforge" else "Forge"
         work_dir = get_work_dir()
         work_dir.mkdir(parents=True, exist_ok=True)
         profiles = work_dir / "launcher_profiles.json"
@@ -308,15 +331,17 @@ class VersionManager:
         manager = JavaManager()
         java = manager.find_java(required) or manager.find_java(0)
         if not java:
-            raise RuntimeError("Java not found to run the NeoForge installer")
+            raise RuntimeError(f"Java not found to run the {display} installer")
         if should_cancel and should_cancel():
             raise CancelledError()
         if progress_callback:
             progress_callback({
-                "phase": "neoforge", "file": "processing", "current": 0, "total": total_steps,
+                "phase": loader, "file": "processing", "current": 0, "total": total_steps,
                 "speed": 0, "files_done": 0, "files_total": total_steps,
             })
-        cmd = [java, "-jar", str(installer_jar), "--installClient", str(work_dir)]
+        cfg = LauncherConfig.load()
+        heap = max(2048, int(cfg.max_memory or 0))
+        cmd = [java, f"-Xmx{heap}M", "-jar", str(installer_jar), "--installClient", str(work_dir)]
         proc = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             text=True, bufsize=1,
@@ -329,7 +354,7 @@ class VersionManager:
                     processed += 1
                     if progress_callback:
                         progress_callback({
-                            "phase": "neoforge", "file": "processing", "current": processed,
+                            "phase": loader, "file": "processing", "current": processed,
                             "total": total_steps, "speed": 0,
                             "files_done": processed, "files_total": total_steps,
                         })
@@ -339,21 +364,36 @@ class VersionManager:
         finally:
             proc.wait()
         if proc.returncode != 0:
-            raise RuntimeError(f"NeoForge installer failed with exit code {proc.returncode}")
+            raise RuntimeError(f"{display} installer failed with exit code {proc.returncode}")
+        try:
+            fam_dir, _ = self._loader_artifacts(loader, full)
+            fam_dir.mkdir(parents=True, exist_ok=True)
+            (fam_dir / ".patch_ok").write_text("ok", encoding="utf-8")
+        except OSError:
+            pass
         if progress_callback:
             progress_callback({
-                "phase": "neoforge", "file": "processing", "current": total_steps,
+                "phase": loader, "file": "processing", "current": total_steps,
                 "total": total_steps, "speed": 0,
                 "files_done": total_steps, "files_total": total_steps,
             })
 
     @staticmethod
-    def _latest_neoforge_version(metadata_xml: str) -> str:
-        import re
-        versions = re.findall(r"<version>([^<]+)</version>", metadata_xml or "")
-        if not versions:
+    def _pick_loader_version(versions: list, mc_version: str, is_neoforge: bool) -> str:
+        if is_neoforge:
+            parts = mc_version.split(".")
+            if parts[0] == "1":
+                rest = parts[1:]
+                prefix = (rest[0] + ".0") if len(rest) == 1 else ".".join(rest)
+            else:
+                prefix = mc_version
+            matches = [v for v in versions if v.split("-", 1)[0].startswith(prefix + ".")]
+        else:
+            matches = [v for v in versions if v.startswith(mc_version + "-")]
+        if not matches:
             return ""
-        return versions[-1]
+        stable = [v for v in matches if "-" not in v]
+        return (stable or matches)[-1]
 
     @staticmethod
     def _meta_from_dict(version_id: str, data: dict) -> VersionMeta:

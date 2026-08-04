@@ -11,7 +11,8 @@ from launcher.utils.http import get_session
 from launcher.utils.progress import ParallelProgress, CancelledError
 
 CHUNK = 262144
-WORKERS = 24
+WORKERS = 32
+PARALLEL_MIN_SIZE = 8 * 1024 * 1024
 
 OBJECTS_DIR = "objects"
 
@@ -61,13 +62,25 @@ class AssetManager:
         dest.parent.mkdir(parents=True, exist_ok=True)
         tmp = dest.with_name(dest.name + ".part")
         url = f"https://resources.download.minecraft.net/{obj_hash[:2]}/{obj_hash}"
+        size = int(obj_info.get("size", 0) or 0)
         try:
             progress.start_file(obj_name)
-            resp = self.session.get(url, timeout=60, stream=True)
-            if resp.status_code != 200:
-                resp.close()
+            if size >= PARALLEL_MIN_SIZE:
+                from launcher.utils.range_download import download_parallel
+                download_parallel(
+                    self.session, url, dest,
+                    on_total=lambda t: None,
+                    on_bytes=lambda n: progress.tick(obj_name, n),
+                    should_cancel=should_cancel, timeout=120,
+                )
+            else:
                 resp = self.session.get(url, timeout=60, stream=True)
-            if resp.status_code == 200:
+                if resp.status_code != 200:
+                    resp.close()
+                    resp = self.session.get(url, timeout=60, stream=True)
+                if resp.status_code != 200:
+                    resp.close()
+                    return False
                 with open(tmp, "wb") as f:
                     for chunk in resp.iter_content(chunk_size=CHUNK):
                         if not chunk:
@@ -76,11 +89,13 @@ class AssetManager:
                         progress.tick(obj_name, len(chunk))
                         if should_cancel and should_cancel():
                             raise CancelledError()
+                resp.close()
                 tmp.replace(dest)
-                progress.finish(obj_name)
-                return True
-        except requests.RequestException:
-            pass
+            return True
+        except CancelledError:
+            raise
+        except (requests.RequestException, IOError):
+            return False
         finally:
             if tmp.exists():
                 try:
@@ -88,7 +103,6 @@ class AssetManager:
                 except OSError:
                     pass
             progress.finish(obj_name)
-        return False
 
     def download_assets(self, asset_version: str, progress_callback: Callable = None,
                         should_cancel: Callable = None) -> int:

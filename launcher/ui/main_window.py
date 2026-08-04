@@ -569,8 +569,6 @@ class MainWindow(QWidget):
                 return True
             except CancelledError:
                 return "cancelled"
-            except Exception:
-                return False
 
         def on_done(result):
             self.progress_bar.setVisible(False)
@@ -585,10 +583,13 @@ class MainWindow(QWidget):
                 self.status_label.setText("Update failed" if updating else "Installation failed")
 
         def on_error(err):
+            msg = err.message if hasattr(err, "message") else str(err)
+            detail = err.traceback if hasattr(err, "traceback") else ""
             self.progress_bar.setVisible(False)
             self.cancel_btn.setVisible(False)
             self._clear_details()
-            self.status_label.setText(f"Install failed: {err}")
+            self.status_label.setText(f"Install failed: {msg}")
+            self._show_error("Installation failed", msg, detail)
 
         run_async(do_install, on_done=on_done, on_error=on_error)
 
@@ -615,6 +616,7 @@ class MainWindow(QWidget):
             "java": "Downloading Java runtime...",
             "java_extract": "Extracting Java runtime...",
             "neoforge": "Installing NeoForge (patching client)...",
+            "forge": "Installing Forge (patching client)...",
             "modpack": "Downloading modpack files...",
         }
         if phase in titles:
@@ -634,7 +636,7 @@ class MainWindow(QWidget):
             pct = int(files_done / files_total * 100) if files_total else 0
         elif phase == "java":
             pct = int(current / total * 100) if total else 0
-        elif phase == "neoforge":
+        elif phase in ("neoforge", "forge"):
             pct = int(current / total * 100) if total else 0
         else:
             pct = 0
@@ -649,6 +651,7 @@ class MainWindow(QWidget):
             "java": "Java runtime",
             "java_extract": "Java extract",
             "neoforge": "NeoForge",
+            "forge": "Forge",
             "modpack": "Modpack",
         }
         self._set_detail("phase", phase_names.get(phase, ""))
@@ -779,17 +782,21 @@ class MainWindow(QWidget):
             self._launch(m, eff_version, java, session, server_address, server_port)
 
         def on_error(err):
+            msg = err.message if hasattr(err, "message") else str(err)
+            detail = err.traceback if hasattr(err, "traceback") else ""
             self.progress_bar.setVisible(False)
             self.cancel_btn.setVisible(False)
             self._clear_details()
-            self.status_label.setText(f"Prepare failed: {err}")
+            self.status_label.setText(f"Prepare failed: {msg}")
             collapse(self.download_status)
             self._refresh_card_states()
-            if "Session expired" in err:
+            if "Session expired" in msg:
                 self.status_label.setText("Session expired — please log in")
                 self._open_login()
                 if self.config.account_name:
                     self.status_label.setText(f"Logged in as {self.config.account_name}. Click Play to start.")
+            else:
+                self._show_error("Launch preparation failed", msg, detail)
 
         run_async(do_prepare, on_done=on_done, on_error=on_error)
 
@@ -848,20 +855,25 @@ class MainWindow(QWidget):
                 if not self.config.keep_launcher_open:
                     self.window().hide()
             except Exception as e:
+                import traceback
                 self.progress_bar.setVisible(False)
                 self.cancel_btn.setVisible(False)
                 self._clear_details()
                 self.status_label.setText(f"Launch failed: {e}")
                 collapse(self.download_status)
                 self._refresh_card_states()
+                self._show_error("Failed to start the game", str(e), traceback.format_exc())
 
         def on_error(err):
+            msg = err.message if hasattr(err, "message") else str(err)
+            detail = err.traceback if hasattr(err, "traceback") else ""
             self.progress_bar.setVisible(False)
             self.cancel_btn.setVisible(False)
             self._clear_details()
-            self.status_label.setText(f"Error: {err}")
+            self.status_label.setText(f"Error: {msg}")
             collapse(self.download_status)
             self._refresh_card_states()
+            self._show_error("Failed to start the game", msg, detail)
 
         run_async(do_launch, on_done=on_done, on_error=on_error)
 
@@ -872,6 +884,21 @@ class MainWindow(QWidget):
         self._refresh_card_states()
         if self.window().isHidden():
             self.window().show()
+
+    def _show_error(self, title: str, message: str, detail: str = ""):
+        text = message if not detail else f"{message}\n\n{detail}"
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Icon.Critical)
+        box.setWindowTitle(title)
+        box.setText(title)
+        box.setInformativeText(message)
+        if detail:
+            box.setDetailedText(detail)
+        copy_btn = box.addButton("Copy to clipboard", QMessageBox.ButtonRole.ActionRole)
+        box.addButton(QMessageBox.StandardButton.Close)
+        box.exec()
+        if box.clickedButton() is copy_btn:
+            QApplication.clipboard().setText(text)
 
     def _open_settings(self):
         dialog = SettingsDialog(self.config, self)

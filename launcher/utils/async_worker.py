@@ -1,4 +1,5 @@
 import sys
+import time
 import threading
 import traceback
 from typing import Callable, Optional, Any
@@ -6,9 +7,30 @@ from typing import Callable, Optional, Any
 from PyQt6.QtCore import QObject, pyqtSignal
 
 
+class ErrorInfo:
+    def __init__(self, message: str, traceback_text: str = ""):
+        self.message = message
+        self.traceback = traceback_text
+
+    def __str__(self) -> str:
+        return self.message
+
+
+def _log_error(tb: str):
+    try:
+        from launcher.utils.storage import get_logs_dir
+        logs = get_logs_dir()
+        logs.mkdir(parents=True, exist_ok=True)
+        path = logs / "launcher.log"
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(f"\n[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tb}\n")
+    except Exception:
+        pass
+
+
 class _Signals(QObject):
     done = pyqtSignal(object)
-    error = pyqtSignal(str)
+    error = pyqtSignal(object)
 
 
 def _make_slot(callback, signal):
@@ -37,10 +59,12 @@ def run_async(
             if slot_done:
                 invoker.done.emit(result)
         except Exception as e:
+            tb = traceback.format_exc()
+            _log_error(tb)
             if slot_error:
-                invoker.error.emit(str(e))
+                invoker.error.emit(ErrorInfo(str(e), tb))
             elif sys.stderr is not None:
-                traceback.print_exc()
+                sys.stderr.write(tb)
 
     t = threading.Thread(target=wrapper, daemon=True)
     t.start()
