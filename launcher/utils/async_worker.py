@@ -1,4 +1,6 @@
+import sys
 import threading
+import traceback
 from typing import Callable, Optional, Any
 
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -12,10 +14,6 @@ class _Signals(QObject):
 def _make_slot(callback, signal):
     def slot(value):
         callback(value)
-        try:
-            signal.disconnect(slot)
-        except TypeError:
-            pass
     return slot
 
 
@@ -34,20 +32,14 @@ def run_async(
         invoker.error.connect(slot_error)
 
     def wrapper():
-        import os as _os
-        _os.write(2, b"DBG: run_async wrapper START\n")
         try:
             result = fn()
-            _os.write(2, b"DBG: run_async wrapper SUCCESS, emitting done\n")
             if slot_done:
                 invoker.done.emit(result)
         except Exception as e:
-            msg = str(e)
-            _os.write(2, f"DBG: run_async wrapper FAILED: {msg}\n".encode())
             if slot_error:
-                invoker.error.emit(msg)
-            else:
-                import traceback
+                invoker.error.emit(str(e))
+            elif sys.stderr is not None:
                 traceback.print_exc()
 
     t = threading.Thread(target=wrapper, daemon=True)

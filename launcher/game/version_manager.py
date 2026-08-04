@@ -1,5 +1,6 @@
 import json
 import os
+import threading
 from pathlib import Path
 from typing import Optional
 from dataclasses import dataclass, field
@@ -411,30 +412,27 @@ class VersionManager:
             if not jar_path.exists():
                 if should_cancel and should_cancel():
                     raise CancelledError()
+                from launcher.utils.range_download import download_parallel
                 progress = FileProgress(progress_callback, "client", f"{version_id}.jar")
-                tmp = jar_path.with_name(jar_path.name + ".part")
-                try:
-                    resp = session.get(client_url, timeout=120, stream=True)
-                    resp.raise_for_status()
-                    total = int(resp.headers.get("content-length", 0))
-                    downloaded = 0
-                    with open(tmp, "wb") as f:
-                        for chunk in resp.iter_content(chunk_size=262144):
-                            if not chunk:
-                                continue
-                            f.write(chunk)
-                            downloaded += len(chunk)
-                            progress.update(downloaded, total)
-                            if should_cancel and should_cancel():
-                                raise CancelledError()
-                    tmp.replace(jar_path)
-                    progress.done()
-                finally:
-                    if tmp.exists():
-                        try:
-                            tmp.unlink()
-                        except OSError:
-                            pass
+                state = {"total": 0, "cur": 0}
+                lock = threading.Lock()
+
+                def on_total(t):
+                    with lock:
+                        state["total"] = t
+                        progress.update(state["cur"], t)
+
+                def on_bytes(n):
+                    with lock:
+                        state["cur"] += n
+                        progress.update(state["cur"], state["total"])
+
+                download_parallel(
+                    session, client_url, jar_path,
+                    on_total=on_total, on_bytes=on_bytes,
+                    should_cancel=should_cancel, timeout=120,
+                )
+                progress.done()
 
         self._download_asset_index(meta, progress_callback, should_cancel)
         self._download_libraries(meta, progress_callback, should_cancel)
@@ -504,7 +502,7 @@ class VersionManager:
             return
         progress = ParallelProgress(progress_callback, "library", total)
         session = get_session()
-        workers = max(1, min(8, total))
+        workers = max(1, min(16, total))
 
         def work(item):
             if should_cancel and should_cancel():

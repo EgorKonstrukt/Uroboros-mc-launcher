@@ -11,7 +11,7 @@ from launcher.utils.http import get_session
 from launcher.utils.progress import ParallelProgress, CancelledError
 
 CHUNK = 262144
-WORKERS = 16
+WORKERS = 24
 
 OBJECTS_DIR = "objects"
 

@@ -466,6 +466,30 @@ QPushButton#PlayButton:disabled {
     color: rgba(255, 255, 255, 0.3);
 }
 
+QPushButton#UpdateButton {
+    background: #FFD54F;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 24px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+QPushButton#UpdateButton:hover {
+    background: #FFE082;
+}
+
+QPushButton#UpdateButton:pressed {
+    background: #FFC107;
+}
+
+QPushButton#UpdateButton:disabled {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.3);
+}
+
 QLabel#ServerHeader {
     font-size: 11px;
     font-weight: 600;

@@ -32,12 +32,14 @@ class ModpackCard(QFrame):
     settings_clicked = pyqtSignal(object)
     delete_clicked = pyqtSignal(object)
 
-    def __init__(self, modpack: dict, installed: bool = False, game_running: bool = False, host=None):
+    def __init__(self, modpack: dict, installed: bool = False, game_running: bool = False, host=None,
+                 update_available: bool = False):
         super().__init__(host)
         self.modpack = modpack
         self.host = host
         self._installed = installed
         self._game_running = game_running
+        self._update_available = update_available
         self._servers = []
         self._hover_anim = None
         self._lift_anim = None
@@ -112,8 +114,8 @@ class ModpackCard(QFrame):
         btn_row.addStretch()
         layout.addLayout(btn_row)
 
-        self._update_primary(installed)
-        self._build_menu(installed)
+        self._update_primary(installed, update_available)
+        self._build_menu(installed, update_available)
 
     @staticmethod
     def _repolish(widget):
@@ -121,7 +123,9 @@ class ModpackCard(QFrame):
         widget.style().polish(widget)
 
     def _on_primary_clicked(self):
-        if self._installed:
+        if self._update_available:
+            self.install_clicked.emit(self.modpack)
+        elif self._installed:
             self.play_clicked.emit(self.modpack)
         else:
             self.install_clicked.emit(self.modpack)
@@ -246,24 +250,34 @@ class ModpackCard(QFrame):
     def _on_hover_color(self, color):
         self.setStyleSheet(self._card_stylesheet(color, self._hover_border))
 
-    def _update_primary(self, installed: bool):
-        self.primary_btn.setText("Play" if installed else "Install")
-        self.primary_btn.setObjectName("PlayButton" if installed else "InstallButton")
-        self.primary_btn.setEnabled(not self._game_running if installed else True)
+    def _update_primary(self, installed: bool, update_available: bool = False):
+        if update_available:
+            self.primary_btn.setText("Update")
+            self.primary_btn.setObjectName("UpdateButton")
+        elif installed:
+            self.primary_btn.setText("Play")
+            self.primary_btn.setObjectName("PlayButton")
+        else:
+            self.primary_btn.setText("Install")
+            self.primary_btn.setObjectName("InstallButton")
+        self.primary_btn.setEnabled(not self._game_running if (installed or update_available) else True)
         self._repolish(self.primary_btn)
 
-    def _build_menu(self, installed: bool):
+    def _build_menu(self, installed: bool, update_available: bool = False):
         self.menu.clear()
         self.menu.addAction("Settings", lambda: self.settings_clicked.emit(self.modpack))
         if installed:
+            if update_available:
+                self.menu.addAction("Update", lambda: self.install_clicked.emit(self.modpack))
             self.menu.addAction("Reinstall", lambda: self.install_clicked.emit(self.modpack))
             self.menu.addAction("Delete", lambda: self.delete_clicked.emit(self.modpack))
 
-    def set_installed(self, installed: bool, game_running: bool = False):
+    def set_installed(self, installed: bool, game_running: bool = False, update_available: bool = False):
         self._installed = installed
         self._game_running = game_running
-        self._update_primary(installed)
-        self._build_menu(installed)
+        self._update_available = update_available
+        self._update_primary(installed, update_available)
+        self._build_menu(installed, update_available)
         if self._servers:
             self.set_servers(self._servers)
 

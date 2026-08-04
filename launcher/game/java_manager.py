@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import threading
 import zipfile
 import tarfile
 import shutil
@@ -263,30 +264,27 @@ class JavaManager:
         ext = ".zip" if sys.platform == "win32" else ".tar.gz"
         java_archive = get_java_dir() / f"java{java_version}{ext}"
 
+        from launcher.utils.range_download import download_parallel
         progress = FileProgress(progress_callback, "java", java_archive.name)
-        tmp = java_archive.with_name(java_archive.name + ".part")
-        try:
-            resp = get_session().get(dl_url, timeout=300, stream=True)
-            resp.raise_for_status()
-            total = int(resp.headers.get("content-length", 0))
-            downloaded = 0
-            with open(tmp, "wb") as f:
-                for chunk in resp.iter_content(chunk_size=262144):
-                    if not chunk:
-                        continue
-                    f.write(chunk)
-                    downloaded += len(chunk)
-                    progress.update(downloaded, total)
-                    if should_cancel and should_cancel():
-                        raise CancelledError()
-            tmp.replace(java_archive)
-            progress.done()
-        finally:
-            if tmp.exists():
-                try:
-                    tmp.unlink()
-                except OSError:
-                    pass
+        state = {"total": 0, "cur": 0}
+        lock = threading.Lock()
+
+        def on_total(t):
+            with lock:
+                state["total"] = t
+                progress.update(state["cur"], t)
+
+        def on_bytes(n):
+            with lock:
+                state["cur"] += n
+                progress.update(state["cur"], state["total"])
+
+        download_parallel(
+            get_session(), dl_url, java_archive,
+            on_total=on_total, on_bytes=on_bytes,
+            should_cancel=should_cancel, timeout=300,
+        )
+        progress.done()
 
         if progress_callback:
             progress_callback({

@@ -17,6 +17,7 @@ from launcher.game.starter import GameStarter
 from launcher.game.version_manager import VersionManager
 from launcher.game.assets import AssetManager
 from launcher.game.java_manager import JavaManager
+from launcher.game.modpack import download_modpack_files
 from launcher.ui.console_window import ConsoleWindow
 from launcher.ui.widgets.modpack_card import ModpackCard, HOST_MARGINS
 from launcher.utils.storage import get_modpack_dir
@@ -27,6 +28,7 @@ from launcher.ui.animations import fade_in, fade_in_window, reveal, collapse, sl
 
 
 INSTALL_MARKER = "installed.marker"
+MANIFEST_HASH_FILE = "manifest.hash"
 
 
 def _is_modpack_installed(mp_dir) -> bool:
@@ -35,6 +37,25 @@ def _is_modpack_installed(mp_dir) -> bool:
     if (mp_dir / INSTALL_MARKER).exists():
         return True
     return any(p for p in mp_dir.iterdir() if p.name != INSTALL_MARKER)
+
+
+def _compute_manifest_hash(files: list) -> str:
+    payload = "\n".join(
+        f"{f.get('name')}:{f.get('sha256') or ''}"
+        for f in sorted(files, key=lambda x: x.get("name", ""))
+        if f.get("sha256")
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _modpack_update_available(mp_dir, modpack) -> bool:
+    server_hash = (modpack.get("manifest_hash") or "").strip()
+    if not server_hash:
+        return False
+    marker = mp_dir / MANIFEST_HASH_FILE
+    if not marker.exists():
+        return True
+    return marker.read_text(encoding="utf-8").strip() != server_hash
 
 
 class _GameSignals(QObject):
@@ -319,12 +340,14 @@ class MainWindow(QWidget):
         for m in self.modpacks:
             mp_dir = get_modpack_dir(self.project["id"], m["id"])
             installed = _is_modpack_installed(mp_dir)
+            update_available = installed and _modpack_update_available(mp_dir, m)
             host = QWidget(self.cards_widget)
             host.setObjectName("ModpackCardHost")
             lay = QVBoxLayout(host)
             lay.setContentsMargins(*HOST_MARGINS)
             lay.setSpacing(0)
-            card = ModpackCard(m, installed=installed, game_running=self._game_running, host=host)
+            card = ModpackCard(m, installed=installed, game_running=self._game_running, host=host,
+                               update_available=update_available)
             card.install_clicked.connect(self._on_install_clicked)
             card.play_clicked.connect(self._on_play_clicked)
             card.connect_clicked.connect(self._on_connect_clicked)
@@ -479,7 +502,8 @@ class MainWindow(QWidget):
         for card in self.modpack_cards:
             mp_dir = get_modpack_dir(self.project["id"], card.modpack["id"])
             installed = _is_modpack_installed(mp_dir)
-            card.set_installed(installed, self._game_running)
+            update_available = installed and _modpack_update_available(mp_dir, card.modpack)
+            card.set_installed(installed, self._game_running, update_available)
 
     def _cancel_install(self):
         self._cancel_requested = True
@@ -497,7 +521,9 @@ class MainWindow(QWidget):
 
         self._cancel_requested = False
         self.cancel_btn.setEnabled(True)
-        self.status_label.setText("Installing...")
+        mp_dir = get_modpack_dir(self.project["id"], m["id"])
+        updating = _is_modpack_installed(mp_dir)
+        self.status_label.setText("Updating..." if updating else "Installing...")
         self.progress_bar.setValue(0)
         self.progress_bar.setVisible(True)
         self.cancel_btn.setVisible(True)
@@ -527,25 +553,18 @@ class MainWindow(QWidget):
                 mp_dir.mkdir(parents=True, exist_ok=True)
 
                 files = self.api.get_modpack_files(self.project["id"], m["id"])
-                total = len(files)
-                for i, f in enumerate(files):
-                    if self._cancel_requested:
-                        return "cancelled"
-                    dest = mp_dir / f["name"]
-                    expected_hash = f.get("sha256", "")
-                    if dest.exists():
-                        if expected_hash:
-                            actual = hashlib.sha256(dest.read_bytes()).hexdigest()
-                            if actual == expected_hash:
-                                continue
-                        elif dest.stat().st_size == f.get("size", 0):
-                            continue
-                    self.api.download_modpack_file(self.project["id"], m["id"], f["name"], dest)
-                    if expected_hash:
-                        actual = hashlib.sha256(dest.read_bytes()).hexdigest()
-                        if actual != expected_hash:
-                            raise IOError(f"Hash mismatch for {f['name']}")
-                    self._update_progress(int((i + 1) / total * 100) if total > 0 else 100)
+                ok = download_modpack_files(
+                    files,
+                    mp_dir,
+                    lambda name: self.api.open_modpack_file(self.project["id"], m["id"], name),
+                    self._update_progress,
+                    should_cancel,
+                )
+                if not ok:
+                    raise IOError("Failed to download some modpack files")
+                mp_dir.joinpath(MANIFEST_HASH_FILE).write_text(
+                    _compute_manifest_hash(files), encoding="utf-8"
+                )
                 mp_dir.joinpath(INSTALL_MARKER).write_text("installed by Uroboros launcher", encoding="utf-8")
                 return True
             except CancelledError:
@@ -558,12 +577,12 @@ class MainWindow(QWidget):
             self.cancel_btn.setVisible(False)
             self._clear_details()
             if result == "cancelled":
-                self.status_label.setText("Installation cancelled")
+                self.status_label.setText("Update cancelled" if updating else "Installation cancelled")
             elif result:
-                self.status_label.setText("Installation complete")
+                self.status_label.setText("Update complete" if updating else "Installation complete")
                 self._refresh_card_states()
             else:
-                self.status_label.setText("Installation failed")
+                self.status_label.setText("Update failed" if updating else "Installation failed")
 
         def on_error(err):
             self.progress_bar.setVisible(False)
@@ -596,6 +615,7 @@ class MainWindow(QWidget):
             "java": "Downloading Java runtime...",
             "java_extract": "Extracting Java runtime...",
             "neoforge": "Installing NeoForge (patching client)...",
+            "modpack": "Downloading modpack files...",
         }
         if phase in titles:
             self.status_label.setText(titles[phase])
@@ -609,6 +629,8 @@ class MainWindow(QWidget):
             else:
                 pct = 0
         elif phase == "asset":
+            pct = int(files_done / files_total * 100) if files_total else 0
+        elif phase == "modpack":
             pct = int(files_done / files_total * 100) if files_total else 0
         elif phase == "java":
             pct = int(current / total * 100) if total else 0
@@ -627,6 +649,7 @@ class MainWindow(QWidget):
             "java": "Java runtime",
             "java_extract": "Java extract",
             "neoforge": "NeoForge",
+            "modpack": "Modpack",
         }
         self._set_detail("phase", phase_names.get(phase, ""))
         self._set_detail("file", str(info.get("file", "")) if info.get("file") else "")

@@ -1,7 +1,8 @@
-from pathlib import Path
 from typing import Any, Optional
 
 import requests
+
+from launcher.utils.http import get_session
 
 
 REQUEST_TIMEOUT = 10
@@ -49,15 +50,11 @@ class APIManager:
     def get_bans(self, uuid: str) -> dict:
         return self._get(f"launcher/bans/{uuid}")
 
-    def download_modpack_file(self, project_id: str, modpack_id: str, filename: str, dest: Path):
+    def open_modpack_file(self, project_id: str, modpack_id: str, filename: str):
         url = f"{self.base_url}/launcher/projects/{project_id}/modpacks/{modpack_id}/download/{filename}"
-        resp = requests.get(url, timeout=REQUEST_TIMEOUT * 6, stream=True, verify=self.verify_ssl)
-        resp.raise_for_status()
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        with open(dest, "wb") as f:
-            for chunk in resp.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
+        return get_session().get(
+            url, timeout=REQUEST_TIMEOUT * 6, stream=True, verify=self.verify_ssl
+        )
 
     def ping_server(self, host: str, port: int = 25565) -> Optional[dict]:
         try:
